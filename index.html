@@ -39,7 +39,7 @@
   <script>
       document.getElementById('video').addEventListener('click', (event) => event.preventDefault() )
       if (mpegts.getFeatureList().mseLivePlayback) {
-          var player = mpegts.createPlayer({
+          let player = mpegts.createPlayer({
               type: 'flv',
               isLive: true,
               url: 'http://hex137.top:8119/live/livestream.flv',
@@ -57,6 +57,10 @@
     const nickname = document.getElementById('nickname');
     const message = document.getElementById('message');
     const messages = document.getElementById('messages');
+    // 昵称
+    let name = getCookie('nickname');
+    if(name !== undefined) nickname.value = name;
+    nickname.addEventListener("change", (event) => {setCookie('nickname', nickname.value)});
     // 发送消息
     form.addEventListener('submit', (event) => {
       event.preventDefault();
@@ -77,6 +81,27 @@
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });
+    // Cookie
+    function getCookie(name) {
+      // decodeURIComponent(document.cookie).split(';').forEach(cookie => {
+      //   cookie = cookie.split('=');
+      //   if(cookie[0] == name){
+      //     return cookie[1];
+      //   }
+      // });
+      const cookies = decodeURIComponent(document.cookie).split(';');
+      for(let i = 0; i < cookies.length; ++i) {
+        let cookie = cookies[i].split('=');
+        if(cookie[0] == name)
+          return cookie[1];
+      }
+    }
+    function setCookie(name, value, expireMillisecond = 7*24*60*60*1000) {
+      const date = new Date();
+      date.setTime(date.getTime() + expireMillisecond);
+      let expires = "expires="+ date.toUTCString();
+      document.cookie = name + "=" + value + ";" + expires + ";path=/";
+    }
   </script>
 </body>
 </html>
