@@ -16,10 +16,15 @@
     #messages { list-style-type: none; margin: 0; padding: 0; }
     #messages > li { padding: 0.5rem 1rem; }
     #messages > li:nth-child(odd) { background: #efefef; }
+
+    .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+    .video-wrapper video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
   </style>
 </head>
 <body>
-  <video id="video" width="100%" autoplay controls></video>
+  <div class="video-wrapper">
+    <video id="video" width="100%" autoplay controls></video>
+  </div>
   <ul id="messages"></ul>
   <form id="form" action="">
     <input class="input" id="nickname" style="width: 20%;" placeholder="昵称" value="♪" autocomplete="off" />
