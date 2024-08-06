@@ -1,10 +1,9 @@
 import fs from "fs";
-import cors from 'cors';
 import express from 'express';
 import { createServer } from 'node:http';
 import { Server } from 'socket.io';
 
-const app = express(cors());
+const app = express();
 const io = new Server(createServer(app).listen(8120), {connectionStateRecovery: {}});
 
 app.get("/", (request, reseponse) => {
