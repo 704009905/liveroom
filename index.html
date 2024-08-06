@@ -37,6 +37,7 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/mpegts.js"></script>
   <script>
+      document.getElementById('video').addEventListener('click', (event) => event.preventDefault() )
       if (mpegts.getFeatureList().mseLivePlayback) {
           var player = mpegts.createPlayer({
               type: 'flv',
