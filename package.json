@@ -1,0 +1,17 @@
+{
+  "name": "liveroom",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mpegts.js": "^1.7.3",
+    "socket.io": "^4.7.5"
+  }
+}

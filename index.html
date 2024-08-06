@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Liveroom</title>
+
+  <style>
+    body { margin: 0; padding-bottom: 3rem; font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+
+    #form { background: rgba(0, 0, 0, 0.15); padding: 0.25rem; position: fixed; bottom: 0; left: 0; right: 0; display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+    #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; }
+    .input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+    .input:focus { outline: none; }
+
+    #messages { list-style-type: none; margin: 0; padding: 0; }
+    #messages > li { padding: 0.5rem 1rem; }
+    #messages > li:nth-child(odd) { background: #efefef; }
+  </style>
+</head>
+<body>
+  <video id="video" muted="muted"></video>
+  <ul id="messages"></ul>
+  <form id="form" action="">
+    <input class="input" id="nickname" style="width: 20%;" placeholder="昵称" value="♪" autocomplete="off" />
+    <input class="input" id="message" style="width: 70%;" placeholder="消息" autocomplete="off" autofocus/>
+    <button>↲</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="js/mpegts.js"></script>
+  <script>
+      if (mpegts.getFeatureList().mseLivePlayback) {
+          var player = mpegts.createPlayer({
+              type: 'flv',
+              isLive: true,
+              url: 'http://hex137.top:8120/live/livestream.flv',
+              enableStashBuffer: false,
+              liveBufferLatencyChasing: true
+          });
+          player.attachMediaElement(document.getElementById('video'));
+          player.load();
+          player.play();
+      }
+  </script>
+  <script>
+    const socket = io();
+    const form = document.getElementById('form');
+    const nickname = document.getElementById('nickname');
+    const message = document.getElementById('message');
+    const messages = document.getElementById('messages');
+    // 发送消息
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      if (message.value) {
+        const timestamp = Date.now();
+        const name = nickname.value;
+        const content = message.value;
+        const messagePayload = {timestamp, name, content};
+        socket.emit('chatMessage', messagePayload);
+        message.value = '';
+      }
+    });
+    // 接收消息
+    socket.on('chatMessage', (messagePayload) => {
+      const item = document.createElement('li');
+      const time = new Date(messagePayload.timestamp);
+      item.textContent = "[" + time.toTimeString().split(' ')[0] + "] " + messagePayload.name + ": " + messagePayload.content;
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+  </script>
+</body>
+</html>
